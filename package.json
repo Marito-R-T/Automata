@@ -15,5 +15,10 @@
   "bugs": {
     "url": "https://github.com/Marito-R-T/Automata/issues"
   },
-  "homepage": "https://github.com/Marito-R-T/Automata#readme"
+  "homepage": "https://github.com/Marito-R-T/Automata#readme",
+  "dependencies":{
+    "ejs": "^2.7.1",
+    "express": "^4.17.1",
+    "morgan": "^1.9.1"
+  }
 }
