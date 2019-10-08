@@ -12,7 +12,7 @@
     <br />
     <div class="container">
       <div class="input-group mb-3">
-        <form action="/automata" enctype="text/plain" method="POST">
+        <form action="/automata" method="post">
         <div class="input-group-prepend">
           <button
             class="btn btn-outline-secondary"
@@ -22,22 +22,23 @@
             Aceptar
           </button>
         </div>
-        <div class="custom-file">
-          <input
-            type="file"
-            class="custom-file-input btn-outline-warning"
-            id="textotxt"
-            name="archivo"
-            onchange="processFiles(this.files)"
-            accept="text/plain"
-          />
-          <label class="custom-file-label" for="verificar"
-            >Escoja un txt</label
-          >
-          <div class="container-fluid" id="fileOutput" style="background: bisque;"></div>
-        </div>
-        <input type="hidden" id="valortexto" name="valortexto">
+        <input type="hidden" id="valortexto" name="valortexto" value="a">
+        <input type="text" id="txt" name="txt">
       </form>
+      </div>
+      <div class="custom-file">
+        <input
+          type="file"
+          class="custom-file-input btn-outline-warning"
+          id="textotxt"
+          name="archivo"
+          onchange="processFiles(this.files)"
+          accept="text/plain"
+        />
+        <label class="custom-file-label" for="verificar"
+          >Escoja un txt</label
+        >
+        <div class="container-fluid" id="fileOutput" style="background: bisque;"></div>
       </div>
     </div>
     <script>
@@ -54,7 +55,9 @@
         var string = output.textContent;
         var o = string.split(/\s+\n*/);
         var elemento = document.getElementById('valortexto');
-        elemento.value = o;
+        var elementotxt = document.getElementById('txt');
+        elementotxt.value = string;
+        console.log('que tal')
         console.log(elemento.value);
         /*for(var i = 0; i<o.length; i++){
           console.log(o[i]);

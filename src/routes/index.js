@@ -9,10 +9,11 @@ router.get('/',(req,res)=>{
 });
 
 router.post('/automata',(req,res)=>{
-    console.log(req.formData());
-    console.log(req.body.archivo);
-    console.log('hola');
-    res.render('analizador');
+    console.log(req.body.txt)
+    res.render('analizador',{
+        palabras: req.body.txt,
+        siguiente: 1
+    });
 });
 
 module.exports = router;
