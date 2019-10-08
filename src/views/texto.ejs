@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <% include reuso/head.html %>
+    <title>Archivo</title>
+  </head>
+  <body class="bg-dark">
+    <br />
+    <div class="container" style="text-align: center; color: azure;">
+      <h2>Ingrese archivo TXT</h2>
+    </div>
+    <br />
+    <div class="container">
+      <div class="input-group mb-3">
+        <form action="/automata" enctype="text/plain" method="POST">
+        <div class="input-group-prepend">
+          <button
+            class="btn btn-outline-secondary"
+            type="submit"
+            id="verificar"
+          >
+            Aceptar
+          </button>
+        </div>
+        <div class="custom-file">
+          <input
+            type="file"
+            class="custom-file-input btn-outline-warning"
+            id="textotxt"
+            name="archivo"
+            onchange="processFiles(this.files)"
+            accept="text/plain"
+          />
+          <label class="custom-file-label" for="verificar"
+            >Escoja un txt</label
+          >
+          <div class="container-fluid" id="fileOutput" style="background: bisque;"></div>
+        </div>
+        <input type="hidden" id="valortexto" name="valortexto">
+      </form>
+      </div>
+    </div>
+    <script>
+    function processFiles(files) {
+      var file = files[0];
+      console.log("hola");
+      var reader = new FileReader();
+    
+      reader.onload = function(e) {
+        // Cuando éste evento se dispara, los datos están ya disponibles.
+        // Se trata de copiarlos a una área <div> en la página.
+        var output = document.getElementById("fileOutput");
+        output.textContent = e.target.result;
+        var string = output.textContent;
+        var o = string.split(/\s+\n*/);
+        var elemento = document.getElementById('valortexto');
+        elemento.value = o;
+        console.log(elemento.value);
+        /*for(var i = 0; i<o.length; i++){
+          console.log(o[i]);
+        };*/
+      };
+      reader.readAsText(file);
+    }
+    </script>
+    <% include reuso/scripts.html %>
+  </body>
+</html>
