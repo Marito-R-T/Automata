@@ -5,6 +5,7 @@
     <title>Archivo</title>
   </head>
   <body class="bg-dark">
+    <% include reuso/navegador.html %>
     <br />
     <div class="container" style="text-align: center; color: azure;">
       <h2>Ingrese archivo TXT</h2>
@@ -22,8 +23,7 @@
             Aceptar
           </button>
         </div>
-        <input type="hidden" id="valortexto" name="valortexto" value="a">
-        <input type="text" id="txt" name="txt">
+        <input  class="invisible" type="text" id="txt" name="txt">
       </form>
       </div>
       <div class="custom-file">
@@ -36,36 +36,16 @@
           accept="text/plain"
         />
         <label class="custom-file-label" for="verificar"
-          >Escoja un txt</label
-        >
+          >Escoja un txt</label>
         <div class="container-fluid" id="fileOutput" style="background: bisque;"></div>
       </div>
     </div>
-    <script>
-    function processFiles(files) {
-      var file = files[0];
-      console.log("hola");
-      var reader = new FileReader();
-    
-      reader.onload = function(e) {
-        // Cuando éste evento se dispara, los datos están ya disponibles.
-        // Se trata de copiarlos a una área <div> en la página.
-        var output = document.getElementById("fileOutput");
-        output.textContent = e.target.result;
-        var string = output.textContent;
-        var o = string.split(/\s+\n*/);
-        var elemento = document.getElementById('valortexto');
-        var elementotxt = document.getElementById('txt');
-        elementotxt.value = string;
-        console.log('que tal')
-        console.log(elemento.value);
-        /*for(var i = 0; i<o.length; i++){
-          console.log(o[i]);
-        };*/
-      };
-      reader.readAsText(file);
-    }
-    </script>
+    <br>
+    <br>
+    <footer>
+        <% include reuso/footer.html %>
+    </footer>
+    <script src="/archivo.js"></script>
     <% include reuso/scripts.html %>
   </body>
 </html>

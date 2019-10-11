@@ -2,10 +2,11 @@ const express = require("express");
 const router = express.Router();
 router.use(express.json());
 const path = require("path");
-const tokens = require("./tokens");
+const tokens = require("./token2");
 var texto = " ";
 var separados = [];
-var number = 0;
+var lineaactual=[];
+var tokensanalizados;
 //rutas
 router.get("/", (req, res) => {
   res.render("texto");
@@ -13,22 +14,12 @@ router.get("/", (req, res) => {
 
 router.post("/automata", (req, res) => {
   texto = req.body.txt;
-  console.log(texto);
   separacion();
   number = 1;
-  if (separados.length > number && separados[number] != "") {
-    var respuesta = tokens(separados[0], number);
-    res.render("analizador", respuesta);
-  } else {
-    res
-      .status(800)
-      .render("analizador", {
-        error: "true",
-        palabra: "",
-        tipo: "",
-        numero: ""
-      });
-  }
+  tokensanalizados = tokens(separados);
+    tokens(separados);
+    console.log(JSON.stringify(tokensanalizados));
+    res.render("analizador", tokensanalizados[1]);
 });
 
 router.get("/automata/siguiente", (req, res) => {

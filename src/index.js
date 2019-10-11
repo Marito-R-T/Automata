@@ -16,7 +16,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:false}));
 
 //rutas
-app.use(require('./routes/index'));
+app.use(require('./routes/index2'));
+
 //middleware
 app.use(express.static(path.join(__dirname, 'public')));
 
