@@ -30,6 +30,10 @@ router.post("/automata", (req, res) => {
   res.render("analizador" /*, initData*/);
 });
 
+router.get("/info", (req, res) => {
+  res.render("info");
+});
+
 router.get("/diagramas", (req, res) => {
   res.render("diagramas");
 });
