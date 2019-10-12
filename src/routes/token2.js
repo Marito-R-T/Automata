@@ -3,9 +3,9 @@ const reservada =
   "variable,entero,decimal,booleano,cadena,si,sino,mientras,hacer,";
 const operadores = "+,-,*,/,%,=,==,<,>,>=,<=,";
 const agrupacion = "(,),{,},";
-const signo = '“,;,”';
+const signo = "“,;,”";
 const digito = "0123456789";
-const alfabeto = "abcdefghijklmnñiopqrstuvwxyz";
+const alfabeto = "abcdefghijklmnñiopqrstuvwxyzABCDEFGHIJKLMNÑIOPQRSTUVWXYZ";
 var tipo;
 var palabra;
 var nueva;
@@ -33,17 +33,18 @@ function verificarEF2() {
     palabras.push(nueva);
     columna.push(numero);
     fila.push(linea);
-    numero+=1;
+    numero += 1;
   }
 }
 
 function verificarEF3() {
-  if (palabra[posicion] == ".") {
+  if (".".indexOf(palabra[posicion]) != -1) {
+    console.log(nueva);
     nueva += palabra[posicion];
     posicion += 1;
     verificarEF4(false);
   } else {
-    tipo = 'entero';
+    tipo = "entero";
     verificarAlfabeto(palabra[posicion], true);
   }
 }
@@ -51,12 +52,12 @@ function verificarEF3() {
 function verificarEF4(aceptado) {
   if (palabra.length > posicion) {
     if (digito.indexOf(palabra[posicion]) != -1) {
-        nueva += palabra[posicion];
+      nueva += palabra[posicion];
       posicion += 1;
       verificarEF4(true);
     } else {
       if (aceptado) {
-        tipo = 'flotante';
+        tipo = "flotante";
         verificarAlfabeto(palabra[posicion], true);
       } else {
         nueva += palabra[posicion];
@@ -66,7 +67,7 @@ function verificarEF4(aceptado) {
         columna.push(numero);
         fila.push(linea);
         nueva = "";
-        numero+=1;
+        numero += 1;
         posicion += 1;
         verificarPalabra();
       }
@@ -81,7 +82,7 @@ function verificarEF4(aceptado) {
     palabras.push(nueva);
     columna.push(numero);
     fila.push(linea);
-    numero+=1;
+    numero += 1;
   }
 }
 
@@ -91,48 +92,51 @@ function verificarID1() {
       digito.indexOf(palabra[posicion]) != -1 ||
       alfabeto.indexOf(palabra[posicion]) != -1
     ) {
-        nueva += palabra[posicion];
+      nueva += palabra[posicion];
       posicion += 1;
       verificarID1();
     } else {
-        verificarreservadas();
-        if(nueva!=''){
-            tipo='id';
-        verificarAlfabeto(palabra[posicion], true);
-        }
+      verificarreservadas();
+      tipo = "id";
+      verificarAlfabeto(palabra[posicion], true);
     }
   } else {
-      verificarreservadas();
-      if(nueva!=''){
-        tipo = 'id'
-        tipos.push(tipo);
-        palabras.push(nueva);
-        columna.push(numero);
-        fila.push(linea);
-        numero+=1;
-      }
-
+    verificarreservadas();
+    if (nueva != "") {
+      tipo = "id";
+      tipos.push(tipo);
+      palabras.push(nueva);
+      columna.push(numero);
+      fila.push(linea);
+      numero += 1;
+    }
   }
 }
 
 function verificarreservadas() {
   var palabrareservada = nueva + ",";
-  if (boolean.indexOf(palabrareservada) != -1 && (alfabeto.indexOf(nueva)==-1)) {
+  if (
+    boolean.indexOf(palabrareservada) != -1 &&
+    alfabeto.indexOf(nueva) == -1
+  ) {
     tipo = "boolean";
     tipos.push(tipo);
     palabras.push(nueva);
     columna.push(numero);
     fila.push(linea);
     numero += 1;
-    nueva = '';
-  } else if (reservada.indexOf(palabrareservada) != -1 && (alfabeto.indexOf(nueva)==-1)) {
+    nueva = "";
+  } else if (
+    reservada.indexOf(palabrareservada) != -1 &&
+    alfabeto.indexOf(nueva) == -1
+  ) {
     tipo = "reservada";
     tipos.push(tipo);
     palabras.push(nueva);
     columna.push(numero);
     fila.push(linea);
     numero += 1;
-    nueva = '';
+    nueva = "";
   }
 }
 
@@ -145,8 +149,21 @@ function verificarAlfabeto(letra, verificar) {
       fila.push(linea);
       numero += 1;
     }
-    tipo = "operador";
-    nueva = letra;
+    if("=><".indexOf(letra) != -1){
+      posicion+=1;
+      console.log(palabra[posicion]);
+      if(palabra.length>posicion&&'='.indexOf(palabra[posicion] != -1)){
+        tipo= "operador";
+        nueva = letra+palabra[posicion];
+      }else{
+        posicion-=1;
+      tipo = "operador";
+      nueva = letra;
+      }
+    }else{
+      tipo = "operador";
+      nueva = letra;
+    }
   } else if (agrupacion.indexOf(letra) != -1) {
     if (nueva != "") {
       tipos.push(tipo);
@@ -177,10 +194,10 @@ function verificarAlfabeto(letra, verificar) {
   columna.push(numero);
   fila.push(linea);
   nueva = "";
-  numero +=1;
-  if(verificar){
+  numero += 1;
+  if (verificar) {
     verificarPalabra();
-    }
+  }
 }
 
 function empezarCiclo() {
@@ -215,27 +232,26 @@ module.exports = function evaluar(arreglo) {
   linea = 0;
   for (var i = 0; i < datosfila.length; i++) {
     linea = i + 1;
-    numero =1;
+    numero = 1;
     empezarCiclo();
   }
   convertirJSON();
   return objeto;
 };
 
-var datos  = [];
+var datos = [];
 var objeto = {};
 
-function convertirJSON(){
-    for(var i= 0; i < palabras.length; i++) {
+function convertirJSON() {
+  for (var i = 0; i < palabras.length; i++) {
+    var nombre = palabras[i];
 
-        var nombre = palabras[i];
-    
-       datos.push({ 
-            "palabra"    : palabras[i],
-            "tipo"  : tipos[i],
-            "columna"    : columna[i] ,
-            "fila" :    fila[i] 
-        });
-    }
-    objeto.datos =datos;
+    datos.push({
+      palabra: palabras[i],
+      tipo: tipos[i],
+      columna: columna[i],
+      fila: fila[i]
+    });
+  }
+  objeto.datos = datos;
 }

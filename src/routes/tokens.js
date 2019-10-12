@@ -3,107 +3,201 @@ const reservada =
   "variable,entero,decimal,booleano,cadena,si,sino,mientras,hacer,";
 const operadores = "+,-,*,/,%,=,==,<,>,>=,<=,";
 const agrupacion = "(,),{,},";
-const signo = '",;,';
+const signo = "“,;,”";
 const digito = "0123456789";
-const alfabeto = "abcdefghijklmnñiopqrstuvwxyz";
+const alfabeto = "abcdefghijklmnñiopqrstuvwxyzABCDEFGHIJKLMNÑIOPQRSTUVWXYZ";
 var tipo;
 var palabra;
+var nueva;
+var posicion;
+var numero;
+var ultima;
 
-function verificarEF2(posicion) {
+function verificarEF2() {
   if (palabra.length > posicion) {
     if (digito.indexOf(palabra[posicion]) != -1) {
+      nueva += palabra[posicion];
       posicion += 1;
-      verificarEF2(posicion);
+      verificarEF2();
     } else {
-      console.log("hola");
-      verificarEF3(posicion);
+      verificarEF3();
     }
   } else {
     tipo = "entero";
+    ultima = nueva;
   }
 }
 
-function verificarEF3(posicion) {
-  if (palabra[posicion] == ".") {
+function verificarEF3() {
+  if (".".indexOf(palabra[posicion]) != -1) {
+    nueva += palabra[posicion];
     posicion += 1;
-    verificarEF4(posicion, false);
+    verificarEF4(false);
   } else {
-    tipo = "error";
+    tipo = "entero";
+    verificarAlfabeto(palabra[posicion], true);
   }
 }
 
-function verificarEF4(posicion, aceptado) {
+function verificarEF4(aceptado) {
   if (palabra.length > posicion) {
     if (digito.indexOf(palabra[posicion]) != -1) {
+      nueva += palabra[posicion];
       posicion += 1;
-      verificarEF4(posicion, true);
+      verificarEF4(true);
     } else {
-      tipo = "error";
+      if (aceptado) {
+        tipo = "flotante";
+        verificarAlfabeto(palabra[posicion], true);
+      } else {
+        nueva += palabra[posicion];
+        tipo = "error";
+        ultima = nueva;
+        nueva = "";
+        posicion += 1;
+      }
     }
   } else {
     if (aceptado) {
       tipo = "flotante";
+      ultima = nueva;
     } else {
       tipo = "error";
+      ultima=nueva;
     }
   }
 }
 
-function verificarID1(posicion) {
+function verificarID1() {
   if (palabra.length > posicion) {
     if (
       digito.indexOf(palabra[posicion]) != -1 ||
       alfabeto.indexOf(palabra[posicion]) != -1
     ) {
+      nueva += palabra[posicion];
       posicion += 1;
-      verificarID1(posicion);
+      verificarID1();
     } else {
-      tipo = "error";
+      verificarreservadas();
+      if (nueva != "") {
+        tipo = "id";
+        verificarAlfabeto(palabra[posicion], true);
+      }
     }
   } else {
-    tipo = "id";
+    verificarreservadas();
+    if (nueva != "") {
+      tipo = "id";
+      ultima=nueva;
+    }
   }
 }
 
-function verificarAlfabeto(posicion) {
-  if (boolean.indexOf(tipopalabra) != -1) {
+function verificarreservadas() {
+  var palabrareservada = nueva + ",";
+  if (
+    boolean.indexOf(palabrareservada) != -1 &&
+    alfabeto.indexOf(nueva) == -1
+  ) {
     tipo = "boolean";
-  } else if (reservada.indexOf(tipopalabra) != -1) {
+    ultima=nueva;
+    nueva = "";
+  } else if (
+    reservada.indexOf(palabrareservada) != -1 &&
+    alfabeto.indexOf(nueva) == -1
+  ) {
     tipo = "reservada";
-    console.log(tipopalabra);
-  } else if (operadores.indexOf(tipopalabra) != -1) {
-    tipo = "operador";
-  } else if (agrupacion.indexOf(tipopalabra) != -1) {
-    tipo = "agrupacion";
-  } else if (signo.indexOf(tipopalabra) != -1) {
+    ultima=nueva;
+    nueva = "";
+  }
+}
+
+function verificarAlfabeto(letra, verificar) {
+  if (operadores.indexOf(letra) != -1) {
+    if (nueva == "") {
+      if ("=><".indexOf(letra) != -1) {
+        posicion += 1;
+        if (palabra.length > posicion && "=".indexOf(palabra[posicion] != -1)) {
+          tipo = "operador";
+          nueva = letra + palabra[posicion];
+          ultima = nueva;
+        } else {
+          posicion -= 1;
+          tipo = "operador";
+          nueva = letra;
+          ultima = nueva;
+        }
+      } else {
+        tipo = "operador";
+        nueva = letra;
+        ultima = nueva;
+      }
+    } else {
+      ultima = nueva;
+      posicion -= 1;
+    }
+  } else if (agrupacion.indexOf(letra) != -1) {
+    console.log(letra);
+    if (nueva == "") {
+      tipo = "agrupacion";
+      nueva = letra;
+      ultima = nueva;
+    } else {
+      posicion-=1;
+      ultima = nueva;
+    }
+  } else if (signo.indexOf(letra) != -1) {
+    if(nueva==""){
     tipo = "signo";
+    nueva = letra;
+    ultima = nueva;
+    }else{
+      posicion-=1;
+      ultima = nueva;
+    }
   } else {
     tipo = "error";
+    nueva += letra;
+    ultima = nueva;
   }
+  nueva = "";
+  posicion+=1;
 }
 
-module.exports = function evaluar(string, numero) {
-  var tipopalabra = string + ",";
-  palabra = string;
-  if (boolean.indexOf(tipopalabra) != -1) {
-    tipo = "boolean";
-  } else if (reservada.indexOf(tipopalabra) != -1) {
-    tipo = "reservada";
-  } else if (operadores.indexOf(tipopalabra) != -1) {
-    tipo = "operador";
-  } else if (agrupacion.indexOf(tipopalabra) != -1) {
-    tipo = "agrupacion";
-  } else if (signo.indexOf(tipopalabra) != -1) {
-    tipo = "signo";
-  } else {
-    if (digito.indexOf(palabra[0]) != -1) {
-      verificarEF2(1);
-    } else if (alfabeto.indexOf(palabra[0]) != -1) {
-      verificarID1(1);
+function verificarPalabra() {
+  if (palabra.length > posicion) {
+    console.log(palabra);
+    if (digito.indexOf(palabra[posicion]) != -1) {
+      nueva += palabra[posicion];
+      posicion += 1;
+      verificarEF2();
+    } else if (alfabeto.indexOf(palabra[posicion]) != -1) {
+      nueva += palabra[posicion];
+      posicion += 1;
+      verificarID1();
     } else {
-      tipo = "error";
+      verificarAlfabeto(palabra[posicion], false);
     }
   }
-
-  return { tipo: tipo, palabra: palabra, numero: numero, error: "false" };
+}
+module.exports = function evaluar(primera, pos, no) {
+  console.log(pos);
+  nueva="";
+  ultima = "";
+  palabra = primera;
+  posicion=pos;
+  numero=no;
+  verificarPalabra();
+  posicion++;
+  if(palabra.length < posicion){
+    numero+=1;
+    posicion=0;
+  }
+  if(posicion!=0){
+    posicion-=1;
+  }
+  return { posicion: posicion, nocolumna: (numero), palabra: ultima, tipo: tipo };
 };
+
+var datos = [];
+var objeto = {};
